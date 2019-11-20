@@ -1,0 +1,75 @@
+Class RepeatActionAndMaxFrame
+  derives from: gym.Wrapper
+  input: environment, repeat
+  init frame buffer as an array of zeros in shape 2 x the obs space
+
+  function step:
+    input: action
+  	set total reward to 0
+    set done to false
+  	for i in range repeat
+  		call the env.step function
+        receive obs, reward, done, info
+  		increment total reward
+  		insert obs in frame buffer
+  		if done
+            break
+    end for
+  	find the max frame
+  	return: max frame, total reward, done, info
+
+  function reset:
+    input: none
+
+  	call env.reset
+  	reset the frame buffer
+    store initial observation in buffer
+
+    return: initial observation
+
+Class PreprocessFrame
+  derives from: gym.ObservationWrapper
+  input: environment, new shape
+  set shape by swapping channels axis
+	set observation space to new shape using gym.spaces.Box (0 to 1.0)
+
+	function observation
+    input: raw observation
+		covert the observation to gray scale
+		resize observation to new shape
+    convert observation to numpy array
+    move observation's channel axis from position 2 to position 0
+    observation /= 255
+		return observation
+
+
+Class StackFrames
+  derives from: gym.ObservationWrapper
+  input: environment, stack size
+	init the new obs space (gym.spaces.Box) low & high bounds as repeat of n_steps
+	initialize empty frame stack
+
+	reset function
+		clear the stack
+		reset the environment
+    for i in range(stack size)
+   		append initial observation to stack
+    convert stack to numpy array
+    reshape stack array to observation space low shape
+    return stack
+
+	observation function
+    input: observation
+		append the observation to the end of the stack
+		convert the stack to a numpy array
+    reshape stack to observation space low shape
+		return the stack of frames
+
+function make_env:
+  input: environment name, new shape, stack size
+  init env with the base gym.make function
+  env := RepeatActionAndMaxFrame
+  env := PreprocessFrame
+  env := StackFrames
+
+  return: env
