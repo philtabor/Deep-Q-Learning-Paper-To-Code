@@ -15,3 +15,7 @@ https://arxiv.org/abs/1509.06461
 Dueling Network Architectures for Deep Reinforcement Learning:
 
 https://arxiv.org/abs/1511.06581
+
+The course is still in review, and this readme is a work in progress. 
+
+Better docs to come!
