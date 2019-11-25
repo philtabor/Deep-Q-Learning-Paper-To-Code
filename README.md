@@ -1,6 +1,8 @@
 # Deep-Q-Learning-Paper-To-Code
 
-Code for my course at Udemy: https://www.udemy.com/deep-q-learning-paper-to-code
+Code for my course at Udemy: 
+
+https://www.udemy.com/course/deep-q-learning-from-paper-to-code/?referralCode=CBA45A3B737237E7BFD2
 
 We analyze and implement the following papers:
 
