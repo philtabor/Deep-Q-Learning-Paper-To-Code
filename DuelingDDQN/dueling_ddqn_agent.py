@@ -42,7 +42,7 @@ class DuelingDDQNAgent(object):
 
         states = T.tensor(state).to(self.q_eval.device)
         rewards = T.tensor(reward).to(self.q_eval.device)
-        dones = T.tensor(done).to(self.q_eval.device)
+        dones = T.tensor(done, dtype=T.bool).to(self.q_eval.device)
         actions = T.tensor(action).to(self.q_eval.device)
         states_ = T.tensor(new_state).to(self.q_eval.device)
 
@@ -92,7 +92,7 @@ class DuelingDDQNAgent(object):
 
         q_eval = T.add(V_s_eval, (A_s_eval - A_s_eval.mean(dim=1,keepdim=True)))
 
-        max_actions = T.argmax(q_eval, dim=1)
+        max_actions = T.argmax(q_eval, dim=1).detach()
         q_next[dones] = 0.0
 
         q_target = rewards + self.gamma*q_next[indices, max_actions]
