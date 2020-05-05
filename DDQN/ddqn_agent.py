@@ -42,7 +42,7 @@ class DDQNAgent(object):
 
         states = T.tensor(state).to(self.q_eval.device)
         rewards = T.tensor(reward).to(self.q_eval.device)
-        dones = T.tensor(done).to(self.q_eval.device)
+        dones = T.tensor(done, dtype=T.bool).to(self.q_eval.device)
         actions = T.tensor(action).to(self.q_eval.device)
         states_ = T.tensor(new_state).to(self.q_eval.device)
 
@@ -83,7 +83,7 @@ class DDQNAgent(object):
         q_next = self.q_next.forward(states_)
         q_eval = self.q_eval.forward(states_)
 
-        max_actions = T.argmax(q_eval, dim=1)
+        max_actions = T.argmax(q_eval, dim=1).detach()
         q_next[dones] = 0.0
 
         q_target = rewards + self.gamma*q_next[indices, max_actions]
