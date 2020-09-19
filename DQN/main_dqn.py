@@ -1,14 +1,17 @@
-#import gym
+import gym
 import numpy as np
 from dqn_agent import DQNAgent
 from utils import plot_learning_curve, make_env
+from gym import wrappers
 
 if __name__ == '__main__':
     env = make_env('PongNoFrameskip-v4')
+    #env = gym.make('CartPole-v1')
     best_score = -np.inf
     load_checkpoint = False
-    n_games = 100
-    agent = DQNAgent(gamma=0.99, epsilon=1.0, lr=0.0001,
+    n_games = 250
+
+    agent = DQNAgent(gamma=0.99, epsilon=1, lr=0.0001,
                      input_dims=(env.observation_space.shape),
                      n_actions=env.action_space.n, mem_size=50000, eps_min=0.1,
                      batch_size=32, replace=1000, eps_dec=1e-5,
@@ -21,7 +24,10 @@ if __name__ == '__main__':
     fname = agent.algo + '_' + agent.env_name + '_lr' + str(agent.lr) +'_' \
             + str(n_games) + 'games'
     figure_file = 'plots/' + fname + '.png'
-
+    # if you want to record video of your agent playing, do a mkdir tmp && mkdir tmp/dqn-video
+    # and uncomment the following 2 lines.
+    #env = wrappers.Monitor(env, "tmp/dqn-video",
+    #                    video_callable=lambda episode_id: True, force=True)
     n_steps = 0
     scores, eps_history, steps_array = [], [], []
 
@@ -37,7 +43,7 @@ if __name__ == '__main__':
 
             if not load_checkpoint:
                 agent.store_transition(observation, action,
-                                     reward, observation_, int(done))
+                                     reward, observation_, done)
                 agent.learn()
             observation = observation_
             n_steps += 1
@@ -50,13 +56,11 @@ if __name__ == '__main__':
             'epsilon %.2f' % agent.epsilon, 'steps', n_steps)
 
         if avg_score > best_score:
-            #if not load_checkpoint:
-            #    agent.save_models()
+            if not load_checkpoint:
+                agent.save_models()
             best_score = avg_score
 
         eps_history.append(agent.epsilon)
-        if load_checkpoint and n_steps >= 18000:
-            break
 
     x = [i+1 for i in range(len(scores))]
-    #plot_learning_curve(steps_array, scores, eps_history, figure_file)
+    plot_learning_curve(steps_array, scores, eps_history, figure_file)
