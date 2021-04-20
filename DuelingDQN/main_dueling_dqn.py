@@ -8,7 +8,10 @@ if __name__ == '__main__':
     best_score = -np.inf
     load_checkpoint = False
     n_games = 20
-    agent = DuelingDQNAgent(gamma=0.99, epsilon=1.0, lr=0.0001,
+    eps = 1
+    if load_checkpoint:
+        eps=0.1
+    agent = DuelingDQNAgent(gamma=0.99, epsilon=eps, lr=0.0001,
                      input_dims=(env.observation_space.shape),
                      n_actions=env.action_space.n, mem_size=50000, eps_min=0.1,
                      batch_size=32, replace=10000, eps_dec=1e-5,
