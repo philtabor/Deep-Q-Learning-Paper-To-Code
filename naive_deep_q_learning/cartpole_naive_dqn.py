@@ -83,7 +83,7 @@ if __name__ == '__main__':
     for i in range(n_games):
         score = 0
         done = False
-        obs = env.reset()
+        obs = env.reset()[0]
 
         while not done:
             action = agent.choose_action(obs)
