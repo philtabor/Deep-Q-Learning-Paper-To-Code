@@ -83,11 +83,11 @@ if __name__ == '__main__':
     for i in range(n_games):
         score = 0
         done = False
-        obs = env.reset()
+        obs = env.reset()[0]
 
         while not done:
             action = agent.choose_action(obs)
-            obs_, reward, done, info = env.step(action)
+            obs_, reward, done, _, info = env.step(action)
             score += reward
             agent.learn(obs, action, reward, obs_)
             obs = obs_
