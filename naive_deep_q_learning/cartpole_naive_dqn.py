@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
         while not done:
             action = agent.choose_action(obs)
-            obs_, reward, done, info = env.step(action)
+            obs_, reward, done, _, info = env.step(action)
             score += reward
             agent.learn(obs, action, reward, obs_)
             obs = obs_
